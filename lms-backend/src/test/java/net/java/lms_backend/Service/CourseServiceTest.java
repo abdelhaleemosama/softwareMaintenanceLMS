@@ -84,7 +84,7 @@ class CourseServiceTest {
         verify(courseRepo, times(1)).save(any(Course.class));
 
     }
-
+//Bug
     @Test
     void viewAllCourse() {
         List<Course> courses=new ArrayList<>();
@@ -92,12 +92,14 @@ class CourseServiceTest {
         MediaFiles mediaFile2 = new MediaFiles(2L, "file2.doc");
         Instructor instructor = new Instructor();
         instructor.setId(1L);
+        User user = new User();
         courses.add(new Course(
                 1L,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
                 List.of(mediaFile1,mediaFile2),
+                user,
                 instructor
 
         ));
@@ -122,12 +124,15 @@ class CourseServiceTest {
         Instructor instructor = new Instructor();
         instructor.setId(1L);
         List<Course> courses=new ArrayList<>();
+        User user = new User();
+
         courses.add(new Course(
                 1L,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
                 List.of(mediaFile1,mediaFile2),
+                user,
                 instructor
 
         ));
@@ -150,12 +155,15 @@ class CourseServiceTest {
         MediaFiles mediaFile2 = new MediaFiles(2L, "file2.doc");
         Instructor instructor = new Instructor();
         instructor.setId(1L);
+        User user = new User();
+
         Course course=new Course(
                 1L,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
                 List.of(mediaFile1,mediaFile2),
+                user,
                 instructor
         );
         when(courseRepo.findById(courseId)).thenReturn(Optional.of(course));

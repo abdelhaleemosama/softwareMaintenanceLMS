@@ -32,14 +32,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless authentication
                 .authorizeHttpRequests(auth -> auth
-                            .requestMatchers(
-                                "/**"
-
-                            )
-//                        .requestMatchers("/api/auth/login",
-//                                "/api/auth/register",
-//                                "/api/auth/confirm").permitAll() // Public endpoints for login, register, etc.
-//                        .anyRequest().authenticated() // All other requests require authentication
+//                            .requestMatchers(
+//                                "/**"
+//
+//                            )
+                        .requestMatchers("/api/auth/login",
+                                "/api/auth/register",
+                                "/api/auth/confirm").permitAll() // Public endpoints for login, register, etc.
+                        .anyRequest().authenticated() // All other requests require authentication
                 );
 
         return http.build();
