@@ -12,6 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
 import static net.java.lms_backend.mapper.UserMapper.ToUserLogin;
 
 @RestController
@@ -19,29 +22,32 @@ import static net.java.lms_backend.mapper.UserMapper.ToUserLogin;
 public class AuthController {
 
     private final AuthService authService;
-//    private final AuthenticationManager authenticationManager;
-//    private final JwtUtil jwtUtil;
+    // private final AuthenticationManager authenticationManager;
+    // private final JwtUtil jwtUtil;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
-//        this.authenticationManager = authenticationManager;
-//        this.jwtUtil = jwtUtil;
+        // this.authenticationManager = authenticationManager;
+        // this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("login")
     public ResponseEntity<String> Login(@RequestBody LoginRequestDTO loginRequest) {
 
-       /* Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtil.generateToken(loginRequest.getUsername());
-        return ResponseEntity.ok(token);*/
-        return authService.Login( ToUserLogin(loginRequest));
+        /*
+         * Authentication authentication = authenticationManager.authenticate(
+         * new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+         * loginRequest.getPassword())
+         * );
+         * SecurityContextHolder.getContext().setAuthentication(authentication);
+         * String token = jwtUtil.generateToken(loginRequest.getUsername());
+         * return ResponseEntity.ok(token);
+         */
+        return authService.Login(ToUserLogin(loginRequest));
     }
 
     @PostMapping("register")
-    public ResponseEntity<String> Register(@RequestBody RegisterDTO user) {
+    public ResponseEntity<String> Register(@Valid @RequestBody RegisterDTO user) {
         return authService.register(user);
     }
 
