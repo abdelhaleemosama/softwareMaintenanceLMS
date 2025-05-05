@@ -92,12 +92,15 @@ class CourseServiceTest {
         MediaFiles mediaFile2 = new MediaFiles(2L, "file2.doc");
         Instructor instructor = new Instructor();
         instructor.setId(1L);
+        //added missing "user" to the constructor
+        User user = new User();
         courses.add(new Course(
                 1L,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
                 List.of(mediaFile1,mediaFile2),
+                user,
                 instructor
 
         ));
@@ -122,12 +125,15 @@ class CourseServiceTest {
         Instructor instructor = new Instructor();
         instructor.setId(1L);
         List<Course> courses=new ArrayList<>();
+        //added missing "user" to the constructor
+        User user = new User();
         courses.add(new Course(
                 1L,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
                 List.of(mediaFile1,mediaFile2),
+                user,
                 instructor
 
         ));
@@ -150,12 +156,16 @@ class CourseServiceTest {
         MediaFiles mediaFile2 = new MediaFiles(2L, "file2.doc");
         Instructor instructor = new Instructor();
         instructor.setId(1L);
+        //added missing "user" to the constructor
+
+        User user = new User();
         Course course=new Course(
                 1L,
                 "Advanced SW",
                 "course on Sw",
                 "6 weeks",
                 List.of(mediaFile1,mediaFile2),
+                user,
                 instructor
         );
         when(courseRepo.findById(courseId)).thenReturn(Optional.of(course));
