@@ -30,16 +30,17 @@ public class AuthService {
     private final EmailSender emailSender;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//    private final JwtTokenProvider tokenProvider;
-//    private final AuthenticationManager authenticationManager;
-    public AuthService(UserService userService, EmailValidatorService emailValidatorService, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    private final JwtTokenProvider tokenProvider;
+    private final AuthenticationManager authenticationManager;
+
+    public AuthService(UserService userService, EmailValidatorService emailValidatorService, ConfirmationTokenService confirmationTokenService, EmailSender emailSender, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.confirmationTokenService = confirmationTokenService;
         this.emailSender = emailSender;
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//        this.tokenProvider = tokenProvider;
-//        this.authenticationManager = authenticationManager;
+        this.tokenProvider = tokenProvider;
+        this.authenticationManager = authenticationManager;
     }
 
     public ResponseEntity<String> register(RegisterDTO user) {
@@ -163,16 +164,15 @@ public class AuthService {
 
             if (bCryptPasswordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
                 if(user.isEnabled()) {
-//                    authenticationManager.authenticate(
-//                            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-//                    );
-//
-//                    List<String> roles = new ArrayList<>();
-//                    roles.add(user.getRole().name());
-//
-//                    String token = tokenProvider.generateToken(user.getUsername(), roles);
-//                    return ResponseEntity.ok("Bearer " + token);
-                        return ResponseEntity.ok("Successfully logged in");
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(user.getUsername(), userRequest.getPassword())
+                    );
+
+                    List<String> roles = new ArrayList<>();
+                    roles.add(user.getRole().name());
+
+                    String token = tokenProvider.generateToken(user.getUsername(), roles);
+                    return ResponseEntity.ok("Bearer " + token);
                 } else {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not enabled");
                 }
