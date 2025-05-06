@@ -1,7 +1,7 @@
 package net.java.lms_backend.Security.config;
 
 import net.java.lms_backend.Security.Jwt.JwtAuthenticationFilter;
-import net.java.lms_backend.Security.Jwt.JwtUtil;
+import net.java.lms_backend.Security.Jwt.JwtTokenProvider;
 import net.java.lms_backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +22,12 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public SecurityConfig(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public SecurityConfig(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Bean
@@ -38,7 +40,9 @@ public class SecurityConfig {
                                 "/api/auth/confirm")
                         .permitAll() // Public endpoints for login, register, etc.
                         .anyRequest().authenticated() // All other requests require authentication
-                );
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(null), jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -49,5 +53,10 @@ public class SecurityConfig {
         provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(userService); // Set the custom UserDetailsService
         return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 }
